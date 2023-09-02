@@ -38,8 +38,26 @@ export const SideBar = () => {
                                     <li className="nk-menu-item">
                                         <Link to="/chat" className="nk-menu-link">
                                             <span className="nk-menu-icon"><em className="icon ni ni-img"></em></span>
-                                            <span className="nk-menu-text">Chat with SuperstarBot</span>
+                                            <span className="nk-menu-text">Chat with LCS APP</span>
                                         </Link>
+                                        <ul className='nk-menu-sub'>
+                                            <li>
+                                            <Link to="/chat" className="nk-menu-link">
+                                            <span className="nk-menu-text">New Chat</span>
+                                            </Link>
+                                            </li>
+                                            <li>
+                                            <Link to="/sql" className="nk-menu-link">
+                                            <span className="nk-menu-text">Existing SQL File</span>
+                                            </Link>
+                                            </li>
+                                            <li>
+                                            <Link to="/vector" className="nk-menu-link">
+                                            <span className="nk-menu-text">Existing Vector DB file</span>
+                                            </Link>
+                                            </li>
+                                        
+                                        </ul>
                                     </li>
                             </ul>
                         </div>

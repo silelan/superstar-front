@@ -20,7 +20,9 @@ function App() {
           <Header />
           <Routes>
             <Route path="/" element={<ContentBox />} />
-            <Route path="/chat" element={<FileUploader />} />
+            <Route path="/chat" element={<FileUploader showTitle={true} heading={"chat"}/>} />
+            <Route path="/sql" element={<FileUploader showTitle={false} heading={"sql"}/>} />
+            <Route path="/vector" element={<FileUploader showTitle={false} heading={"vector"}/>} />
           </Routes>
         </div>
       </>

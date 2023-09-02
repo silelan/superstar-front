@@ -14091,7 +14091,7 @@ svg {
 }
 @media (min-width: 992px) {
   .wide-md {
-    max-width: 960px !important;
+    max-width: 100vw !important;
   }
   .wide-md-fix {
     width: 960px !important;

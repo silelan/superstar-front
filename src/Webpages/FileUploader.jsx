@@ -1,24 +1,51 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useState } from 'react'
 import axios from 'axios';
+import { ChatPage } from '../components/chatPage';
 
 
 
-export const TabComponent = () => {
+export const TabComponent = ({showTitle, heading}) => {
     const [file, setFile] = useState()
     const [uploadedFile, setUploadedFile] = useState();
     const [error, setError] = useState();
     const [success, setSuccess] = useState(false);
     const [filename, setFilename] = useState("Choose file");
+    const [title, setTitle] = useState();
+    const [description, setDescription] = useState();
+
+    useEffect(() => {
+        // Reset your variables or state here when the the heading value changes
+        setActiveTab(1);
+      }, [heading]);
+    
+    //Function to handle title change
+    const handleTitleChange = (event) => {
+        setTitle(event?.target?.value)
+    } 
+
+    //Function to handle description change
+    const handleDescriptionChange = (event) => {
+        console.log("title ", event?.target?.value);
+        setDescription(event?.target?.value)
+        
+    } 
 
     const handleChange = (event) => {
         const selectedFile = event.target.files[0];
         console.log(`The file = ${selectedFile.name}`)
+        const fileExtension = selectedFile.name.split('.').pop().toLowerCase(); 
         if (selectedFile) {
+            if (heading === "chat" && fileExtension !== "pdf") {
+                setError("Invalid File Format");
+            }
+            if ((heading === "sql" || heading === "vector") && fileExtension !== "sql") {
+                setError("Invalid File Format");
+            }
             setFilename(selectedFile.name);
             setFile(selectedFile);
         }
-    }   
+    }
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -68,7 +95,7 @@ export const TabComponent = () => {
                 {error && <div className="alert alert-pro alert-danger mt-3">
                     <div className="alert-text">
                         <h6>Your file could not be uploaded</h6>
-                        <p>{error.message}</p>
+                        <p>{error.message || error}</p>
                     </div>
                 </div>}
                 {success && <div className="alert alert-pro alert-success mt-3">
@@ -77,14 +104,60 @@ export const TabComponent = () => {
                         <p>Click on the <em>Next</em> button to add title and description</p>
                     </div>
                 </div>}
+                
             </>)
 
     }
-    var dict = {
+    // Have text field and text description to display under the Provide Title tab
+    const UploadText = () => {
+        return (
+            <>
+                <form onSubmit={handleSubmit}>
+                    <div className="form-title">
+                    <div className="form-group">
+                        <label className="form-label" htmlFor="text">Title</label>
+                        <input
+                            type="text"
+                            className="form-control"
+                            id="text"
+                            name="text"
+                            placeholder="Title"
+                            value={title}
+                            onChange={handleTitleChange}
+                        /> 
+                    </div>
+                    <div className="form-group">
+                        <label className="form-label" htmlFor="description">Description</label>
+                        <textarea
+                            className="form-control"
+                            id="description"
+                            name="description"
+                            rows="4"
+                            placeholder="Description"
+                            value={description}
+                            onChange={handleDescriptionChange}
+                        ></textarea>
+                    </div>
+                    </div>
+                </form>
+            </>)
+
+    }
+
+    const UploadChatPage = () => {
+        return (
+            <>
+                <ChatPage></ChatPage>
+            </>)
+
+    }
+    var dict = showTitle ? {
         'Upload Document': UploadDoc,
-        'Provide Title': UploadDoc,
-        'Review Document': UploadDoc,
-        'Submit': UploadDoc
+        'Provide Title': UploadText,
+        'Chat Page': UploadChatPage,
+    } : {
+        'Upload Document': UploadDoc,
+        'Chat Page': UploadChatPage 
     }
 
     return (
