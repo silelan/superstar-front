@@ -1,8 +1,13 @@
 
 import React from 'react'
-import {Link} from 'react-router-dom'
+import {Link, useLocation} from 'react-router-dom'
 
 export const SideBar = () => {
+    function isActive(path) {
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        const currentPath = useLocation().pathname;
+        return currentPath === path;
+      }
     return (
         <div className="nk-sidebar nk-sidebar-fixed is-dark " data-content="sidebarMenu">
             <div className="nk-sidebar-element nk-sidebar-head">
@@ -43,17 +48,17 @@ export const SideBar = () => {
                                         <ul className='nk-menu-sub'>
                                             <li>
                                             <Link to="/chat" className="nk-menu-link">
-                                            <span className="nk-menu-text">New Chat</span>
+                                            <span className={`nk-menu-text ${isActive('/chat') ? 'active-text' : ''}`}>New Chat</span>
                                             </Link>
                                             </li>
                                             <li>
                                             <Link to="/sql" className="nk-menu-link">
-                                            <span className="nk-menu-text">Existing SQL File</span>
+                                            <span className={`nk-menu-text ${isActive('/sql') ? 'active-text' : ''}`}>Existing SQL File</span>
                                             </Link>
                                             </li>
                                             <li>
                                             <Link to="/vector" className="nk-menu-link">
-                                            <span className="nk-menu-text">Existing Vector DB file</span>
+                                            <span className={`nk-menu-text ${isActive('/vector') ? 'active-text' : ''}`}>Existing Vector DB file</span>
                                             </Link>
                                             </li>
                                         

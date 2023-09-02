@@ -40,25 +40,25 @@ code {
 }
 
 .favChat {
-  width: 185px;
+  width: 0px;
 }
 
 @media (min-width: 1200px) {
   .collapseCont {
-    padding-right: 185px !important;
+    padding-right: 0px !important;
   }
 }
 @media (min-width: 1540px) {
   .collapseCont {
-    padding-right: 185px !important;
+    padding-right: 0px !important;
   }
 }
 
 .collapsed {
-  background-color: #FD3616;
+  background-color: #6576ff;
   position: absolute;
-  right: 15px;
-  
+  right: 20px;
+  top: 15px
 }
 
 .collapsible-content {
@@ -77,4 +77,13 @@ code {
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
   border-top: 5px solid white; /* You can adjust the color here */
+}
+
+.clickable {
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+.active-text {
+  color: #6576ff;; /* Change to the text color you want for active links */
 }

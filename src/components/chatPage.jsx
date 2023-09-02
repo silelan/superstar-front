@@ -6,7 +6,7 @@ import classNames from "classnames";
 export const ChatPage = (props) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
-  const buttonClasses = classNames("collapsible-button", {
+  const buttonClasses = classNames("collapsible-button btn btn-primary", {
     collapsed: isCollapsed,
   });
 
@@ -676,7 +676,7 @@ export const ChatPage = (props) => {
           </div>
         <div className={containerClasses}>
           <button className={buttonClasses} onClick={toggleCollapse}>
-            {isCollapsed ? "Favourite Chats" : "Hide"}
+            {isCollapsed ? <em className="icon ni ni-menu"></em> : "Hide"}
           </button>
           <div className={contentClasses}>
             <div class="nk-chat-aside-body" data-simplebar>

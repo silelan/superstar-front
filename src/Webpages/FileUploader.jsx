@@ -21,13 +21,13 @@ export const TabComponent = ({showTitle, heading}) => {
     
     //Function to handle title change
     const handleTitleChange = (event) => {
-        setTitle(event?.target?.value)
+        // setTitle(event?.target?.value)
     } 
 
     //Function to handle description change
     const handleDescriptionChange = (event) => {
         console.log("title ", event?.target?.value);
-        setDescription(event?.target?.value)
+        // setDescription(event?.target?.value)
         
     } 
 
@@ -76,6 +76,12 @@ export const TabComponent = ({showTitle, heading}) => {
         // Increment the activeTab state to show the next tab
         setActiveTab(prevTab => prevTab + 1);
     }
+    
+    const handlePrevClick = () => {
+        // Increment the activeTab state to show the next tab
+        setActiveTab(prevTab => prevTab - 1);
+    }
+
     const UploadDoc = () => {
         return (
             <>
@@ -151,6 +157,7 @@ export const TabComponent = ({showTitle, heading}) => {
             </>)
 
     }
+    console.log("active tab ", activeTab);
     var dict = showTitle ? {
         'Upload Document': UploadDoc,
         'Provide Title': UploadText,
@@ -174,13 +181,14 @@ export const TabComponent = ({showTitle, heading}) => {
                                             {Object.entries(dict).map(([key, value], index) => (
                                                 <li className="nav-item" key={key + "-" + index}>
                                                     <a
-                                                        className={`nav-link ${index + 1 === activeTab ? 'active' : ''} ${index + 1 > activeTab ? 'disabled' : ''}`}
+                                                        className={`nav-link ${index + 1 === activeTab ? 'active' : ''} ${index + 1 > activeTab ? 'disabled' : ''} clickable`}
                                                         data-bs-toggle="tab"
                                                         href={`#tabItem${index + 1}`}> {key} </a>
                                                 </li>
                                             ))}
                                         </ul>
                                         <div className="tab-content">
+                                            
                                             {Object.entries(dict).map(([key, Component], index) => (
                                                 <div
                                                     className={`tab-pane ${index + 1 === activeTab ? 'active' : ''}`}
@@ -188,8 +196,13 @@ export const TabComponent = ({showTitle, heading}) => {
                                                     key={index}
                                                 >
                                                     <Component />
-                                                    <div className="container d-flex justify-content-end">
-                                                        {index !== 3 && <button className="btn btn-danger" onClick={handleNextClick}>Next</button>}
+                                                    <div className="container d-flex">
+                                                    <div className="btn container d-flex justify-content-start">
+                                                        {index !== 0 && <button className="btn btn-danger" onClick={handlePrevClick}>Previous</button>}
+                                                    </div>
+                                                    <div className="btn container d-flex justify-content-end">
+                                                        {index !== Object.entries(dict).length-1 && <button className="btn btn-danger" onClick={handleNextClick}>Next</button>}
+                                                    </div>
                                                     </div>
                                                 </div>
                                             ))}

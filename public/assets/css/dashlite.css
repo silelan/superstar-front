@@ -31143,7 +31143,7 @@ body.nav-shown {
   color: #fff;
 }
 .nk-menu-sub .active > .nk-menu-link {
-  color: #6576ff;
+  /* color: #6576ff; */
 }
 .is-theme .nk-menu-sub .active > .nk-menu-link {
   color: #fff;
@@ -40669,6 +40669,7 @@ button.close {
   padding: 1rem 1.75rem;
   border-bottom: 1px solid #e5e9f2;
   background-color: #fff;
+  width: 95%
 }
 .nk-chat-head-info {
   width: 60%;
