@@ -85,5 +85,5 @@ code {
 }
 
 .active-text {
-  color: #6576ff;; /* Change to the text color you want for active links */
+  color: red; /* Change to the text color you want for active links */
 }
