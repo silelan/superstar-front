@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useRef } from 'react';
 import { useState } from 'react'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-
+import { Editor } from '@tinymce/tinymce-react';
+import { fileData } from '../component/demoData/filedata';
 
 export const TabComponent = () => {
     const [file, setFile] = useState()
@@ -13,6 +14,8 @@ export const TabComponent = () => {
     const [filename, setFilename] = useState("Choose file");
     const [fileDescription, setFileDescription] = useState("");
     const [fileType, setFileType] = useState("Default");
+    const [fileContent, setFileContent] = useState("");
+    
     const [fileDetail, setFileDetail] = useState({
         title: '',
         desc: ''
@@ -20,6 +23,14 @@ export const TabComponent = () => {
     const [selectFile, setSelectFile] = useState();
 
     const navigate = useNavigate();
+
+    const editorRef = useRef(null);
+    const log = () => {
+      if (editorRef.current) {
+        console.log(editorRef.current.getContent());
+      }
+    };
+
     const handleChange = (event) => {
         const selectedFile = event.target.files[0];
         console.log('The file =', event.target.files)
@@ -60,14 +71,14 @@ export const TabComponent = () => {
         // navigate('/chat')
     }
 
-    const fileDetailChange = (e) => {
-        e.preventDefault()
-        console.log("sdkhkjds", e.target.value)
-        setFileDetail({
-            ...fileDetail,
-            [e.target.name]: e.target.value,
-        })
-    }
+    // const fileDetailChange = (e) => {
+    //     e.preventDefault();
+    //     console.log("sdkhkjds", e.target.value)
+    //     setFileDetail({
+    //         ...fileDetail,
+    //         [e.target.name]: e.target.value,
+    //     })
+    // }
     const UploadDoc = () => {
         return (
             <>
@@ -98,30 +109,28 @@ export const TabComponent = () => {
                         </div>
                     </div>
                     {/* <button className="btn btn-dim btn-success">Upload </button> */}
-                    <fieldset>
                         <div className="mb-3">
-                            <label htmlFor="disabledTextInput" className="form-label">File Title</label>
+                            <label htmlFor="TextInput" className="form-label">File Title</label>
                             <input
                                 type="text"
-                                id="disabledTextInput"
+                                // id="disabledTextInput"
                                 name='title'
                                 className="form-control form-control-lg"
                                 placeholder={'Enter Title'}
-                                onChange={fileDetailChange}
-                                defaultValue={fileDetail.title} />
+                                onChange={(e)=>setFileDetail({...fileDetail,[e.target.name]: e.target.value})}
+                                value={fileDetail.title} />
                         </div>
                         <div className="mb-3">
-                            <label htmlFor="disabledTextInput" className="form-label">File Description</label>
+                            <label htmlFor="TextInput" className="form-label">File Description</label>
                             <input
                                 type="text"
-                                id="disabledTextInput"
+                                // id="disabledTextInput"
                                 name='desc'
                                 className="form-control form-control-lg"
                                 placeholder={'Enter Description'}
-                                onChange={fileDetailChange}
+                                onChange={(e)=>setFileDetail({...fileDetail,[e.target.name]: e.target.value})}
                                 value={fileDetail.desc} />
                         </div>
-                    </fieldset>
                 </form>
                 {uploadedFile && <img src={uploadedFile} alt="Uploaded content" />}
                 {error && <div className="alert alert-pro alert-danger mt-3">
@@ -142,6 +151,12 @@ export const TabComponent = () => {
 
     const selectFileChange = (event) => {
         setSelectFile(event.target.value)
+        fileData.filter((item) => {
+            if(item.id === event.target.value){
+                setFileContent(item.message)
+            }
+        });
+
     }
 
     const reviewDocument = () => {
@@ -151,7 +166,7 @@ export const TabComponent = () => {
                     <div className="row">
                         <div className="col-8 border">
                             <div className="mb-3 mt-2">
-                                <select className="form-select form-select-lg mb-3" aria-label=".form-select-lg example" onChange={selectFileChange} value={fileType}>
+                                <select className="form-select form-select-lg mb-3" aria-label=".form-select-lg example" onChange={selectFileChange} value={selectFile}>
                                     <option>Select file</option>
                                     <option value="0">file.pdf</option>
                                     <option value="1">filetwo.docx</option>
@@ -160,25 +175,45 @@ export const TabComponent = () => {
                                 </select>
                             </div>
                             <div className="mb-3 mt-2">
-                                <label for="exampleFormControlTextarea1" className="form-label">File Content</label>
-                                <textarea className="form-control mb-1 " id="exampleFormControlTextarea1" rows="3">
-                                    I found an issues when try to purchase the product.
-                                </textarea>
-                                <button type="button" class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top">
-  Tooltip on top
-</button>
+                                <label htmlFor="exampleFormControlTextarea1" className="form-label">File Content</label>
+                                <Editor
+                                    onInit={(evt, editor) => editorRef.current = editor}
+                                    initialValue={`<p>${fileContent}</p>`}
+                                //     initialValue={`<iframe
+                                //     src="https://drive.google.com/viewerng/viewer?embedded=true&url=http://infolab.stanford.edu/pub/papers/google.pdf#toolbar=0&scrollbar=0"
+                                //     frameBorder="0"
+                                //     scrolling="auto"
+                                //     height="100%"
+                                //     width="100%"
+                                // ></iframe>`}
+                                    
+                                    init={{
+                                        height: 500,
+                                        menubar: false,
+                                        plugins: [
+                                            'a11ychecker', 'advlist', 'advcode', 'advtable', 'autolink', 'checklist', 'export',
+                                            'lists', 'link', 'image', 'charmap', 'preview', 'anchor', 'searchreplace', 'visualblocks',
+                                            'powerpaste', 'fullscreen', 'formatpainter', 'insertdatetime', 'media', 'table', 'help', 'wordcount'
+                                        ],
+                                        toolbar: 'undo redo | casechange blocks | bold italic backcolor | ' +
+                                            'alignleft aligncenter alignright alignjustify | ' +
+                                            'bullist numlist checklist outdent indent | removeformat | a11ycheck code table help',
+                                        content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+                                    }}
+                                />
+                                <button onClick={log}>Log editor content</button>
                             </div>
                         </div>
                         <div className="col-4 border">
                             <div className="mb-3 mt-2">
-                                <label for="exampleFormControlTextarea1" className="form-label">Get Suggestion</label>
+                                <label htmlFor="exampleFormControlTextarea1" className="form-label">Get Suggestion</label>
                                 <textarea className="form-control mb-1 " id="exampleFormControlTextarea1" rows="3"></textarea>
                                 <div className="container d-flex justify-content-end">
                                     <button type='button' className="btn btn-danger ">Save</button>
                                 </div>
                             </div>
                             <div className="mb-3">
-                                <label for="exampleFormControlTextarea1" className="form-label">Insert new content</label>
+                                <label htmlFor="exampleFormControlTextarea1" className="form-label">Insert new content</label>
                                 <textarea className="form-control mb-1" id="exampleFormControlTextarea1" rows="3"></textarea>
                                 <div className="container d-flex justify-content-end">
                                     <button type='button' className="btn btn-danger ">Save</button>
