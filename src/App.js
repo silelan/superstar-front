@@ -4,9 +4,10 @@ import { Header } from './Webpages/Header';
 // import {Input} from './Pages/Input'
 // import {FileUploader} from './Pages/FileUploader'
 import { SideBar } from './Webpages/SideBar';
-import { ContentBox } from './Webpages/ContentBox';
+// import { ContentBox } from './Webpages/ContentBox';
 import { TabComponent as FileUploader } from './Webpages/FileUploader';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import {ChatList} from './component/chat/chatList';
 
 function App() {
   return (
@@ -19,8 +20,10 @@ function App() {
         <div className="nk-wrap ">
           <Header />
           <Routes>
-            <Route path="/" element={<ContentBox />} />
-            <Route path="/chat" element={<FileUploader />} />
+            {/* <Route path="/" element={<ContentBox />} />*/}
+            {/* <Route path="/chat" element={<FileUploader />} /> */}
+            <Route path="/" element={<FileUploader />} />
+            <Route path="/chat" element={<ChatList />} />
           </Routes>
         </div>
       </>

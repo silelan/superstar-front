@@ -1,6 +1,7 @@
 import React from 'react'
 import { useState } from 'react'
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -10,15 +11,23 @@ export const TabComponent = () => {
     const [error, setError] = useState();
     const [success, setSuccess] = useState(false);
     const [filename, setFilename] = useState("Choose file");
+    const [fileDescription, setFileDescription] = useState("");
+    const [fileType, setFileType] = useState("Default");
+    const [fileDetail, setFileDetail] = useState({
+        title: '',
+        desc: ''
+    });
+    const [selectFile, setSelectFile] = useState();
 
+    const navigate = useNavigate();
     const handleChange = (event) => {
         const selectedFile = event.target.files[0];
-        console.log(`The file = ${selectedFile.name}`)
+        console.log('The file =', event.target.files)
         if (selectedFile) {
             setFilename(selectedFile.name);
-            setFile(selectedFile);
+            setFileDescription(selectedFile.type);
         }
-    }   
+    }
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -48,21 +57,71 @@ export const TabComponent = () => {
     const handleNextClick = () => {
         // Increment the activeTab state to show the next tab
         setActiveTab(prevTab => prevTab + 1);
+        // navigate('/chat')
+    }
+
+    const fileDetailChange = (e) => {
+        e.preventDefault()
+        console.log("sdkhkjds", e.target.value)
+        setFileDetail({
+            ...fileDetail,
+            [e.target.name]: e.target.value,
+        })
     }
     const UploadDoc = () => {
         return (
             <>
                 <form onSubmit={handleSubmit}>
+                    {/* Dropdown to select file type start here*/}
+                    <select className="form-select form-select-lg mb-3" aria-label=".form-select-lg example" onChange={selectFileType} value={fileType}>
+                        <option>Select file type to upload</option>
+                        <option value="pdf">PDF</option>
+                        <option value="docx">DOCX</option>
+                        <option value="sql">SQL</option>
+                        <option value="vdb">VDB</option>
+                    </select>
+                    {/* Dropdown to select file type end here*/}
                     <div className="form-group">
-                        <label className="form-label" as="customFileLabel">Default File Upload</label>
+                        <label className="form-label" as="customFileLabel">{fileType.toUpperCase()} File Upload</label>
                         <div className="form-control-wrap">
                             <div className="form-file">
-                                <input type="file" name="file" className="form-file-input" id="customFile" onChange={handleChange} />
+                                <input
+                                    type="file"
+                                    name="file"
+                                    className="form-file-input"
+                                    id="customFile"
+                                    onChange={handleChange}
+                                    accept={`.${fileType}`}
+                                />
                                 <label className="form-file-label" htmlFor="customFile">{filename}</label>
                             </div>
                         </div>
                     </div>
-                    <button className="btn btn-dim btn-success">Upload </button>
+                    {/* <button className="btn btn-dim btn-success">Upload </button> */}
+                    <fieldset>
+                        <div className="mb-3">
+                            <label htmlFor="disabledTextInput" className="form-label">File Title</label>
+                            <input
+                                type="text"
+                                id="disabledTextInput"
+                                name='title'
+                                className="form-control form-control-lg"
+                                placeholder={'Enter Title'}
+                                onChange={fileDetailChange}
+                                defaultValue={fileDetail.title} />
+                        </div>
+                        <div className="mb-3">
+                            <label htmlFor="disabledTextInput" className="form-label">File Description</label>
+                            <input
+                                type="text"
+                                id="disabledTextInput"
+                                name='desc'
+                                className="form-control form-control-lg"
+                                placeholder={'Enter Description'}
+                                onChange={fileDetailChange}
+                                value={fileDetail.desc} />
+                        </div>
+                    </fieldset>
                 </form>
                 {uploadedFile && <img src={uploadedFile} alt="Uploaded content" />}
                 {error && <div className="alert alert-pro alert-danger mt-3">
@@ -80,24 +139,79 @@ export const TabComponent = () => {
             </>)
 
     }
+
+    const selectFileChange = (event) => {
+        setSelectFile(event.target.value)
+    }
+
+    const reviewDocument = () => {
+        return (
+            <>
+                <div className='container mb-2'>
+                    <div className="row">
+                        <div className="col-8 border">
+                            <div className="mb-3 mt-2">
+                                <select className="form-select form-select-lg mb-3" aria-label=".form-select-lg example" onChange={selectFileChange} value={fileType}>
+                                    <option>Select file</option>
+                                    <option value="0">file.pdf</option>
+                                    <option value="1">filetwo.docx</option>
+                                    <option value="2">filethree.sql</option>
+                                    <option value="3">filefour.vdb</option>
+                                </select>
+                            </div>
+                            <div className="mb-3 mt-2">
+                                <label for="exampleFormControlTextarea1" className="form-label">File Content</label>
+                                <textarea className="form-control mb-1 " id="exampleFormControlTextarea1" rows="3">
+                                    I found an issues when try to purchase the product.
+                                </textarea>
+                                <button type="button" class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top">
+  Tooltip on top
+</button>
+                            </div>
+                        </div>
+                        <div className="col-4 border">
+                            <div className="mb-3 mt-2">
+                                <label for="exampleFormControlTextarea1" className="form-label">Get Suggestion</label>
+                                <textarea className="form-control mb-1 " id="exampleFormControlTextarea1" rows="3"></textarea>
+                                <div className="container d-flex justify-content-end">
+                                    <button type='button' className="btn btn-danger ">Save</button>
+                                </div>
+                            </div>
+                            <div className="mb-3">
+                                <label for="exampleFormControlTextarea1" className="form-label">Insert new content</label>
+                                <textarea className="form-control mb-1" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                <div className="container d-flex justify-content-end">
+                                    <button type='button' className="btn btn-danger ">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </>
+        )
+    }
     var dict = {
         'Upload Document': UploadDoc,
-        'Provide Title': UploadDoc,
-        'Review Document': UploadDoc,
-        'Submit': UploadDoc
+        // 'Provide Title': UploadDoc,
+        'Review Document': reviewDocument,
+        'Download Document': UploadDoc
+    }
+    // select file type function
+    const selectFileType = (event) => {
+        setFileType(event.target.value)
     }
 
     return (
 
-        <div className="nk-content ">
+        <div className="nk-content mt-0 ml-0">
             <div className="container-fluid">
                 <div className="nk-content-inner">
                     <div className="nk-content-body">
-                        <div className="content-page wide-md ml-3">
+                        <div className="content-page ml-3">
                             <div className="nk-block">
                                 <div className="card card-bordered">
                                     <div className="card-inner card-inner-xl">
-                                        <ul className="nav nav-tabs">
+                                        <ul className="nav nav-tabs d-flex justify-content-evenly">
                                             {Object.entries(dict).map(([key, value], index) => (
                                                 <li className="nav-item" key={key + "-" + index}>
                                                     <a
@@ -107,7 +221,8 @@ export const TabComponent = () => {
                                                 </li>
                                             ))}
                                         </ul>
-                                        <div className="tab-content">
+                                        <div className="tab-content wide-md mx-auto">
+
                                             {Object.entries(dict).map(([key, Component], index) => (
                                                 <div
                                                     className={`tab-pane ${index + 1 === activeTab ? 'active' : ''}`}
@@ -116,7 +231,8 @@ export const TabComponent = () => {
                                                 >
                                                     <Component />
                                                     <div className="container d-flex justify-content-end">
-                                                        {index !== 3 && <button className="btn btn-danger" onClick={handleNextClick}>Next</button>}
+                                                        {/* {index !== 3 && <button className="btn btn-danger" onClick={handleNextClick}>Next</button>} */}
+                                                        {<button className="btn btn-danger" onClick={handleNextClick}>Next</button>}
                                                     </div>
                                                 </div>
                                             ))}
