@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useState } from 'react'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -15,6 +15,8 @@ export const TabComponent = () => {
     const [fileDescription, setFileDescription] = useState("");
     const [fileType, setFileType] = useState("Default");
     const [fileContent, setFileContent] = useState("");
+    const [selectedText, setSelectedText] = useState("");
+    const [temp, setTemp] = useState(0);
     
     const [fileDetail, setFileDetail] = useState({
         title: '',
@@ -84,13 +86,13 @@ export const TabComponent = () => {
             <>
                 <form onSubmit={handleSubmit}>
                     {/* Dropdown to select file type start here*/}
-                    <select className="form-select form-select-lg mb-3" aria-label=".form-select-lg example" onChange={selectFileType} value={fileType}>
+                    {/* <select className="form-select form-select-lg mb-3" aria-label=".form-select-lg example" onChange={selectFileType} value={fileType}>
                         <option>Select file type to upload</option>
                         <option value="pdf">PDF</option>
                         <option value="docx">DOCX</option>
                         <option value="sql">SQL</option>
                         <option value="vdb">VDB</option>
-                    </select>
+                    </select> */}
                     {/* Dropdown to select file type end here*/}
                     <div className="form-group">
                         <label className="form-label" as="customFileLabel">{fileType.toUpperCase()} File Upload</label>
@@ -102,7 +104,8 @@ export const TabComponent = () => {
                                     className="form-file-input"
                                     id="customFile"
                                     onChange={handleChange}
-                                    accept={`.${fileType}`}
+                                    // accept={`.${fileType}`}
+                                    accept=".docx, .pdf"
                                 />
                                 <label className="form-file-label" htmlFor="customFile">{filename}</label>
                             </div>
@@ -159,11 +162,15 @@ export const TabComponent = () => {
 
     }
 
+    const selectText = () =>{
+        setSelectedText(window.getSelection())
+        setTemp(temp+1)
+    }
     const reviewDocument = () => {
         return (
             <>
                 <div className='container mb-2'>
-                    <div className="row">
+                    <div className="row h-75">
                         <div className="col-8 border">
                             <div className="mb-3 mt-2">
                                 <select className="form-select form-select-lg mb-3" aria-label=".form-select-lg example" onChange={selectFileChange} value={selectFile}>
@@ -174,7 +181,7 @@ export const TabComponent = () => {
                                     <option value="3">filefour.vdb</option>
                                 </select>
                             </div>
-                            <div className="mb-3 mt-2">
+                            {/* <div className="mb-3 mt-2">
                                 <label htmlFor="exampleFormControlTextarea1" className="form-label">File Content</label>
                                 <Editor
                                     onInit={(evt, editor) => editorRef.current = editor}
@@ -202,23 +209,36 @@ export const TabComponent = () => {
                                     }}
                                 />
                                 <button onClick={log}>Log editor content</button>
-                            </div>
+                            </div> */}
+                            <label htmlFor="exampleFormControlTextarea1" className="form-label">File Content</label>
+                                <textarea 
+                                    className="form-control mb-1 " 
+                                    id="exampleFormControlTextarea1" 
+                                    rows="3" 
+                                    defaultValue={fileContent} 
+                                    onMouseUp={selectText}></textarea>
                         </div>
                         <div className="col-4 border">
                             <div className="mb-3 mt-2">
-                                <label htmlFor="exampleFormControlTextarea1" className="form-label">Get Suggestion</label>
-                                <textarea className="form-control mb-1 " id="exampleFormControlTextarea1" rows="3"></textarea>
-                                <div className="container d-flex justify-content-end">
-                                    <button type='button' className="btn btn-danger ">Save</button>
+                                {/* <label htmlFor="exampleFormControlTextarea1" className="form-label">Get Suggestion</label> */}
+                                <textarea 
+                                    className="form-control mb-1 " 
+                                    id="exampleFormControlTextarea1" 
+                                    rows="3"
+                                    defaultValue={selectedText}></textarea>
+                                <div className="container d-flex justify-content-around">
+                                    <button type='button' className="btn btn-danger m-1">Rewrite</button>
+                                    <button type='button' className="btn btn-danger m-1">Summerize</button>
+                                    <button type='button' className="btn btn-danger m-1">Insert</button>
                                 </div>
                             </div>
-                            <div className="mb-3">
+                            {/* <div className="mb-3">
                                 <label htmlFor="exampleFormControlTextarea1" className="form-label">Insert new content</label>
                                 <textarea className="form-control mb-1" id="exampleFormControlTextarea1" rows="3"></textarea>
                                 <div className="container d-flex justify-content-end">
                                     <button type='button' className="btn btn-danger ">Save</button>
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                 </div>
@@ -236,6 +256,9 @@ export const TabComponent = () => {
         setFileType(event.target.value)
     }
 
+    useEffect(()=>{
+        setSelectedText(window.getSelection())
+    },[temp])
     return (
 
         <div className="nk-content mt-0 ml-0">
@@ -256,7 +279,7 @@ export const TabComponent = () => {
                                                 </li>
                                             ))}
                                         </ul>
-                                        <div className="tab-content wide-md mx-auto">
+                                        <div className="tab-content h-100 mx-auto">
 
                                             {Object.entries(dict).map(([key, Component], index) => (
                                                 <div
